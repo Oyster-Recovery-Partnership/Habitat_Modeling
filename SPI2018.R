@@ -18,10 +18,10 @@ PT_df = data.frame(PT)
 
 # other
 litChop = readOGR("G:/1.0 Restoration and Monitoring/3.0 Little Choptank/1.0 LC Pre_Construction_2018/1.0 GIS/Final Deliverables", "LC_sanc_bound_project")
-litChop = spTransform(dat, CRS("+proj=longlat +datum=WGS84"))
+litChop = spTransform(litChop, CRS("+proj=longlat +datum=WGS84"))
 
 # The input file geodatabase
-fgdb <- "G:/Tributary Blueprints/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_07_09_19/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_07_09_2019.gdb"
+fgdb <- "G:/Tributary Blueprints/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_11_12_2019/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_11_12_2019.gdb"
 
 # List all feature classes in a file geodatabase
 subset(ogrDrivers(), grepl("GDB", name))
@@ -54,7 +54,7 @@ print(fc_list)
 # "Little_Choptank_BluePrint_07_09_2019"   
 
 # Read the feature class
-fc <- readOGR(dsn=fgdb,layer="Little_Choptank_BluePrint_07_09_2019")
+fc <- readOGR(dsn=fgdb,layer="Little_Choptank_BluePrint_11_12_2019")
 fc = spTransform(fc, CRS("+proj=longlat +datum=WGS84"))
 
 # Determine the FC extent, projection, and attribute information
@@ -69,6 +69,7 @@ ggplot() +
   geom_point(data = PT_df, aes(x = Longitude, y = Latitude), col = "black", pch = 16) + 
   geom_point(data = SPI_df, aes(x = Longitude, y = Latitude), col = "magenta", pch = 15) + 
   theme_bw() + 
-  lims(x = c(-76.265,-76.225), y = c(38.522,38.5425))
+  #lims(x = c(-76.265,-76.225), y = c(38.522,38.5425)) + 
+  labs(x = "Longitude", y = "Latitude")
 
  
