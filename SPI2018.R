@@ -1,7 +1,7 @@
 # this script is to look at the SPI camera data from 2018
 
 # directory
-dir.in = "G:/1.0 Restoration and Monitoring/8.0 Habitat modeling/NFWF Habitat/1.0 GIS/"
+dir.in = "~/Oyster Recovery Partnership, Inc/ORP - Operations/Monitoring and Assessment/11_Habitat Modeling/GIS/"
 
 # load packages
 library(rgdal)
@@ -17,11 +17,11 @@ SPI_df = data.frame(SPI)
 PT_df = data.frame(PT)
 
 # other
-litChop = readOGR("G:/1.0 Restoration and Monitoring/3.0 Little Choptank/1.0 LC Pre_Construction_2018/1.0 GIS/Final Deliverables", "LC_sanc_bound_project")
+litChop = readOGR("~/Oyster Recovery Partnership, Inc/ORP - Operations/GIS/1.0 Restoration and Monitoring/3.0 Little Choptank/1.0 LC Pre_Construction_2018/1.0 GIS/Final Deliverables", "LC_sanc_bound_project")
 litChop = spTransform(litChop, CRS("+proj=longlat +datum=WGS84"))
 
 # The input file geodatabase
-fgdb <- "G:/Tributary Blueprints/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_11_12_2019/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_11_12_2019.gdb"
+fgdb <- "~/Oyster Recovery Partnership, Inc/ORP - Operations/GIS/Tributary Blueprints/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_11_12_2019/Little_Choptank_Oyster_Restoration_Blueprint_Geodatabase_11_12_2019.gdb"
 
 # List all feature classes in a file geodatabase
 subset(ogrDrivers(), grepl("GDB", name))
@@ -72,4 +72,4 @@ ggplot() +
   #lims(x = c(-76.265,-76.225), y = c(38.522,38.5425)) + 
   labs(x = "Longitude", y = "Latitude")
 
- 
+
