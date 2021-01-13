@@ -14,7 +14,7 @@ require(sf)
 # -------------- #
 # set dir
 # -------------- #
-dir.out = "U:/O365_NEW_ Operations/Monitoring and Assessment/11_Habitat Modeling/Data/output/variable_curves"
+dir.out = "~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Assessment/11_Habitat Modeling/Data/output/variable_curves"
 # -------------- #
 
 # -------------- #
@@ -51,10 +51,13 @@ cmecs_curve = as.data.frame(cbind(c("Bio_Shell_Reef",
                                     "SandyMud",
                                     "Mud_Shell",
                                     "Mud"),
-                                  c(1, 0.9, 0.8, 0.8,  
-                                    0.75, 0.7, 0.7, 0.7,
-                                    0.6, 0.5, 0.3, 0.2,
-                                    0.1, 0.1, -0.01),
+                                  c(rep(1,9),
+                                    0.7, 1, 0.5, 0.5,
+                                    1,0.3),
+                                  # c(1, 0.9, 0.8, 0.8,  
+                                  #   0.75, 0.7, 0.7, 0.7,
+                                  #   0.6, 0.5, 0.3, 0.2,
+                                  #   0.1, 0.1, -0.01),
                                   c(seq(1,15,by=1))))
                                   #c("Biogenic_Oyster_Reef",
                                   #  "Biogenic_Oyster_Rubble",
@@ -71,7 +74,6 @@ cmecs_curve = mutate(cmecs_curve, cmecs = as.character(cmecs), ranks = as.numeri
 # plot curve
 p = ggplot(data = cmecs_curve, aes(x = reorder(cmecs, ranks), y = ranks)) + 
   geom_bar(stat = "identity", width = 1) + 
-  geom_area(col = "darkgrey") + 
   theme_bw() + labs(x = "CMECS Classification", y = "Habitat Rank") + 
   theme(text = element_text(size=20),
         axis.text.x = element_text(angle = 20, hjust = 1)) 
@@ -83,6 +85,8 @@ ggsave(paste(dir.out,"cmecs_curve.png",sep="/"), p)
 # -------------- #
 # TEMPERATURE 
 # -------------- #
+# -2°C to 36°C
+
 # mean summer temp
 # mean winter temp
 # rate of temp change
@@ -93,10 +97,51 @@ ggsave(paste(dir.out,"cmecs_curve.png",sep="/"), p)
 # SALINITY
 # -------------- #
 # salinity extremes
+# 5 - 40, optimal 14 - 28
+salt_curve = as.data.frame(cbind(c(seq(0, 45, by = 1)),
+                                    c(rep(0.25, 5),
+                                      rep(0.5, 9),
+                                      rep(1, 15),
+                                      rep(0.5, 12),
+                                      rep(0.25, 5))))
+names(salt_curve)=c("salinity","score")
+
+p = ggplot(data = salt_curve, aes(x = salinity, y = score)) + 
+  geom_bar(stat = "identity", width = 1) + 
+  theme_bw() + labs(x = "Salinity", y = "Habitat Rank") + 
+  theme(text = element_text(size=20),
+        axis.text.x = element_text(angle = 20, hjust = 1)) 
+p 
+ggsave(paste(dir.out,"salt_curve.png",sep="/"), p)
 # -------------- #
 
 
 # -------------- #
 # DEPTH
 # -------------- #
+# 6 - 30 feet
+
 # -------------- #
+
+
+# -------------- #
+# CHL A
+# -------------- #
+# 	                         Spring Threshold       Summer Threshold
+# Tidal - fresh	(0-0.4 ppt)  ≤ 14                   ≤ 12
+# Oligohaline	(0.5-5 ppt)    ≤ 20.9                 ≤ 9.5
+# Mesohaline (5.1-18 ppt)	   ≤ 6.2                  ≤ 7.7                           
+# Polyhaline (18.1-30 ppt)	 ≤ 2.8                  ≤ 4.5
+
+# -------------- #
+
+
+# -------------- #
+# O2
+# -------------- #
+# Open water	≥ 5 (mg/L)
+# Deep water seasonal	≥ 3 (mg/L)
+# Deep- channel seasonal	≥ 1 (mg/L)
+
+# -------------- #
+
