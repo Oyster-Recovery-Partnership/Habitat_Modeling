@@ -262,7 +262,7 @@ ggsave(paste(dir.out,"max_salt_curve.png",sep="/"), p)
 # 0.5-3 optimal, no curve (Hijuelos et al. 2017)
 # 0-3.5=1, 4.5=0.5, 4.6-10=0 (Theuerkauf and Lipscius 2016)
 # 0-4=1, 8=0 (Starke et al. 2011)
-depth_curve = as.data.frame(cbind(c(0,3.5,4.5,8),c(1,1,0.5,0)))
+depth_curve = as.data.frame(cbind(c(0,3.5,10),c(1,1,0)))
 names(depth_curve)=c("depth","score")
 
 p = ggplot(data = depth_curve, aes(x = depth, y = score)) + 
@@ -313,7 +313,8 @@ ggsave(paste(dir.out,"chl_curve.png",sep="/"), p)
 # Deep water seasonal	≥ 3 (mg/L)
 # Deep- channel seasonal	≥ 1 (mg/L)
 # Perc. Sat. 40=0, 73+=1 (Cho et al. 2012)
-min_o2_curve = as.data.frame(cbind(c(40,73,200),c(0,1,1)))
+# convert perc. sat. to mg/l for Cho, 40=3.3, 73=6.03 
+min_o2_curve = as.data.frame(cbind(c(3.3,6.03,14),c(0,1,1)))
 names(min_o2_curve)=c("o2","score")
 
 p = ggplot(data = min_o2_curve, aes(x = o2, y = score)) + 
@@ -322,7 +323,7 @@ p = ggplot(data = min_o2_curve, aes(x = o2, y = score)) +
   geom_area(col="lightgrey") + 
   theme_bw() + labs(x = "Dissolved Oxygen", y = "Habitat Rank") + 
   theme(text = element_text(size=20)) +
-  ggtitle("Min. Dissolved Oxygen (Perc. Sat.)")
+  ggtitle("Min. Dissolved Oxygen (mg/L)")
 p 
 ggsave(paste(dir.out,"min_o2_curve.png",sep="/"), p)
 # -------------- #
