@@ -20,55 +20,43 @@ source("~/Oyster Recovery Partnership, Inc/ORP - Operations/Monitoring and Asses
 # define scores for variables 
 # ----------------- #
 # make depth score curve and look up table
-depth_curve = as.data.frame(cbind(c(0,3.5,10), c(1,1,0)))
-depth_curve = approx(depth_curve[,1], depth_curve[,2], xout = seq(0, 10, by = 1))
+depth_curve = as.data.frame(cbind(c(0, 3.5, 10, 27), c(1, 1, 0, 0)))
+depth_curve = approx(depth_curve[,1], depth_curve[,2], xout = seq(0, 27, by = 1))
 depth.df <- data.frame(matrix(unlist(depth_curve), nrow=length(depth_curve[[1]]), byrow=F))
 names(depth.df)=c("depth","score")
-#ggplot()+geom_line(data = depth.df, aes(x=depth, y=score))
+# ggplot()+geom_line(data = depth.df, aes(x=depth, y=score))
 # ----------------- #
 
-
+  
 # ----------------- #
-# run through look for all months for all years
+# manipulte data
 # ----------------- #
-depth.months = matrix(data = NA, nrow = 120, ncol = 1760)
+# slide array
+ndvi.slice <- eb_h
+r <- raster(t(ndvi.slice), xmn=min(eb_lon), xmx=max(eb_lon), ymn=min(eb_lat), ymx=max(eb_lat), crs=CRS("+proj=longlat"))
+r <- flip(r, direction='y')
+#plot(r, xlim = c(min(eb_lon), max(eb_lon)), ylim=c(min(eb_lat), max(eb_lat)))
+  
+# clip to Eastern Bay
+newr = clip_to_eb(r)
+#plot(newr)
+# ----------------- #
+  
+  
+# ----------------- #
+# create habitat scores based on curves
+# ----------------- #
+#### depth
+# put scores on depth raster
+# make a copy of existing raster, find where the oxygen matches that score, then replace values
+depth_score = round(newr, digits = 0) # round to closet 0.01 to make score look up table
+depth_score[depth_score %in% NaN] = NA
 
-for(a in 1:120){
-  # ----------------- #
-  # manipulte data
-  # ----------------- #
-  # slide array
-  ndvi.slice <- eb_h[, , a]
-  r <- raster(t(ndvi.slice), xmn=min(eb_lon), xmx=max(eb_lon), ymn=min(eb_lat), ymx=max(eb_lat), crs=CRS("+proj=longlat"))
-  r <- flip(r, direction='y')
-  #plot(r, xlim = c(min(eb_lon), max(eb_lon)), ylim=c(min(eb_lat), max(eb_lat)))
-  
-  # clip to Eastern Bay
-  newr = clip_to_eb(r)
-  #plot(newr)
-  # ----------------- #
-  
-  
-  # ----------------- #
-  # create habitat scores based on curves
-  # ----------------- #
-  #### depth
-  # put scores on depth raster
-  # make a copy of existing raster, find where the oxygen matches that score, then replace values
-  depth_score = round(newr, digits = 0) # round to closet 0.01 to make score look up table
-  depth_score[depth_score %in% NaN] = NA
-  
-  w.list = lapply(depth_score, function(x) {which(as.factor(depth.df$depth) %in% x)}) # need to make factor for some reason
-  is.na(w.list) <- lengths(w.list) == 0
-  
-  w.score = unlist(w.list)
-  depth.score = depth.df$score[w.score]
-  
-  depth.months[a,] = depth.score
-  # ----------------- #
-}
+w.list = lapply(depth_score, function(x) {which(as.factor(depth.df$depth) %in% x)}) # need to make factor for some reason
+is.na(w.list) <- lengths(w.list) == 0
 
-final.depth.score = apply(depth.months, 2, mean, na.rm=TRUE)
+w.score = unlist(w.list)
+final.depth.score = depth.df$score[w.score]
 newplot = newr
 values(newplot) = final.depth.score
 
