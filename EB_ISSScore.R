@@ -20,8 +20,8 @@ source("~/Oyster Recovery Partnership, Inc/ORP - Operations/Monitoring and Asses
 # define scores for variables 
 # ----------------- #
 # make chl a score curve and look up table
-iss_curve = as.data.frame(cbind(c(0, 10, 50, 121), c(1, 1, 0, 0)))
-iss_curve = approx(iss_curve[,1], iss_curve[,2], xout = seq(0, 121, by = 1))
+iss_curve = as.data.frame(cbind(c(0, 0.5, 5, 121), c(1, 0.5, 0, 0)))
+iss_curve = approx(iss_curve[,1], iss_curve[,2], xout = seq(0, 121, by = 0.1))
 iss.df <- data.frame(matrix(unlist(iss_curve), nrow=length(iss_curve[[1]]), byrow=F))
 names(iss.df)=c("iss","score")
 # ggplot()+geom_line(data = iss.df, aes(x=iss, y=score))
@@ -58,7 +58,7 @@ for(a in 1:120){
   #### inorganic suspended solids
   # put scores on iss raster
   # make a copy of existing raster, find where the oxygen matches that score, then replace values
-  iss_score = round(newr, digits = 0) # round to closet 1 to make score look up table
+  iss_score = round(newr, digits = 1) # round to closet 1 to make score look up table
   iss_score[iss_score %in% NaN] = NA
   
   w.list = lapply(iss_score, function(x) {which(as.factor(iss.df$iss) %in% x)}) # need to make factor for some reason
