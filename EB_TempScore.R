@@ -24,6 +24,7 @@ temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36), c(0,0.05,0.25,1,1,0.25,
 temp_curve = approx(temp_curve[,1], temp_curve[,2], xout = seq(-2, 36, by = 0.1))
 temp.df <- data.frame(matrix(unlist(temp_curve), nrow=length(temp_curve[[1]]), byrow=F))
 names(temp.df)=c("temp","score")
+#ggplot()+geom_line(data = temp.df, aes(x=temp, y=score))
 # ----------------- #
 
 
@@ -67,7 +68,7 @@ for(a in 1:120){
   # ----------------- #
 }
 
-final.temp.score = apply(temp.months, 2, mean, na..rm=TRUE)
+final.temp.score = apply(temp.months, 2, mean, na.rm=TRUE)
 newplot = newr
 values(newplot) = final.temp.score
 
@@ -81,4 +82,5 @@ p = ggplot()+
   geom_tile(data=r.df, aes(x=x, y=y, fill = layer)) + 
   labs(x="Longitude", y="Latitude", title="Mean Temperature Score", fill="Score") + 
   scale_fill_gradient(low="blue", high="yellow")
+p
 ggsave("~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Assessment/11_Habitat Modeling/Data/output/MeanTempMap.png", p)
