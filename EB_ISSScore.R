@@ -20,8 +20,8 @@ source("~/Oyster Recovery Partnership, Inc/ORP - Operations/Monitoring and Asses
 # define scores for variables 
 # ----------------- #
 # make chl a score curve and look up table
-iss_curve = as.data.frame(cbind(c(0, 0.5, 5, 121), c(1, 0.5, 0, 0)))
-iss_curve = approx(iss_curve[,1], iss_curve[,2], xout = seq(0, 121, by = 0.1))
+iss_curve = as.data.frame(cbind(c(-1, 0.5, 5, 121), c(1, 0.5, 0, 0)))
+iss_curve = approx(iss_curve[,1], iss_curve[,2], xout = seq(-1, 121, by = 0.1))
 iss.df <- data.frame(matrix(unlist(iss_curve), nrow=length(iss_curve[[1]]), byrow=F))
 names(iss.df)=c("iss","score")
 # ggplot()+geom_line(data = iss.df, aes(x=iss, y=score))
