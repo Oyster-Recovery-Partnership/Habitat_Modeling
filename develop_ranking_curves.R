@@ -291,7 +291,7 @@ ggsave(paste(dir.out,"depth_curve.png",sep="/"), p)
 # 0=0, 100=1 (Theuerkauf et al. 2018)
 #chl_curve = as.data.frame(cbind(c(0,12,50,55),c(0,1,1,0)))
 #chl_curve = as.data.frame(cbind(c(0,100),c(0,1)))
-chl_curve = as.data.frame(cbind(c(0,12,50,100),c(0,0.75,0.75,1)))
+chl_curve = as.data.frame(cbind(c(0,12,50),c(0,0.75,1)))
 names(chl_curve)=c("chl","score")
 
 p = ggplot(data = chl_curve, aes(x = chl, y = score)) + 
@@ -330,19 +330,19 @@ ggsave(paste(dir.out,"min_o2_curve.png",sep="/"), p)
 
 
 # -------------- #
-# SUSPENDED SOLIDS
+# INORGANIC SUSPENDED SOLIDS
 # -------------- #
-# 0-9=1, 50=0.1 (Cho et al. 2012)
-ss_curve = as.data.frame(cbind(c(0,9,50),c(1,1,0.1)))
+# 0-9=1, 50=0.1 mg/l suspended sediments (Cho et al. 2012)
+ss_curve = as.data.frame(cbind(c(0, 0.5, 5),c(1, 0.5, 0)))
 names(ss_curve)=c("ss","score")
 
 p = ggplot(data = ss_curve, aes(x = ss, y = score)) + 
   geom_point()+
   geom_line()+
   geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Suspended Solids", y = "Habitat Rank") + 
+  theme_bw() + labs(x = "ISS (g/L)", y = "Habitat Rank") + 
   theme(text = element_text(size=20)) +
-  ggtitle("Suspended Solids")
+  ggtitle("Inorganic Suspended Solids (g/L)")
 p 
 ggsave(paste(dir.out,"ss_curve.png",sep="/"), p)
 # -------------- #
