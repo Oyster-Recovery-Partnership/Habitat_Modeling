@@ -120,14 +120,35 @@ test3 = sf_1  %>%
   summarize(rankings = mean(score, na.rm = TRUE)) %>%
   dplyr::select(rankings)
 
-p = ggplot(test3) + geom_sf(aes(fill=rankings)) + 
-  #geom_polygon(data = eb, aes(x=lon, y=lat)) + 
+# p = ggplot(test3) + geom_sf(aes(fill=rankings)) + 
+#   labs(x="Longitude", y="Latitude", title="Mean CMECS Score", fill="Score") + 
+#   scale_fill_gradient(low="blue", high="yellow")
+# p 
+# ggsave("~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Assessment/11_Habitat Modeling/Data/output/CMECSMap.png", p)
+
+# make tibble spatial, then rasterize to get the right cell numbers
+s = as_Spatial(test3)
+f = rasterize(s, newr)
+values(f) = s$rankings[values(f)] # replace newr values with cmecs scores
+final.cmecs.score = values(f)
+
+# change raster to spatial pixels data frame to data frame in order to use ggplot
+r.spdf <- as(f, "SpatialPixelsDataFrame")
+r.df <- as.data.frame(r.spdf)
+
+p = ggplot() + 
+  geom_polygon(data = eb, aes(x=long, y=lat, group=group)) + 
+  geom_tile(data = r.df, aes(x=x, y=y, fill=V1)) +
   labs(x="Longitude", y="Latitude", title="Mean CMECS Score", fill="Score") + 
   scale_fill_gradient(low="blue", high="yellow")
 p 
 ggsave("~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Assessment/11_Habitat Modeling/Data/output/CMECSMap.png", p)
 
-f = fasterize(test3, newr)
-f[!is.na(f)] = test3$rankings
-# doesnt work but is needed to get the right number of cells 
+
+# f = fasterize(test3, newr) # library(fasterize)
+# f = rasterize(test3, newr)
+# f = st_rasterize(test3, template = newr) # library(stars)
+# f = st_transform(test3, st_crs(newr)) # library(stars)
+# 
+# https://geocompr.robinlovelace.net/spatial-operations.html
 
