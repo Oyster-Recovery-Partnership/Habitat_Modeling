@@ -20,7 +20,7 @@ source("~/Oyster Recovery Partnership, Inc/ORP - Operations/Monitoring and Asses
 # define scores for variables 
 # ----------------- #
 # make salinity score curve and look up table
-temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36), c(0,0.05,0.25,1,1,0.25,0)))
+temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36), c(0,0.1,0.5,1,1,0.25,0)))
 temp_curve = approx(temp_curve[,1], temp_curve[,2], xout = seq(-2, 36, by = 0.1))
 temp.df <- data.frame(matrix(unlist(temp_curve), nrow=length(temp_curve[[1]]), byrow=F))
 names(temp.df)=c("temp","score")
@@ -45,7 +45,7 @@ for(a in 1:120){
   
   # clip to Eastern Bay
   newr = clip_to_eb(r)
-  #plot(newr)
+  # plot(newr)
   # ----------------- #
   
   
@@ -71,15 +71,16 @@ for(a in 1:120){
 final.temp.score = apply(temp.months, 2, mean, na.rm=TRUE)
 newplot = newr
 values(newplot) = final.temp.score
+# plot(newplot)
 
 # change raster to spatial pixels data frame to data frame in order to use ggplot
 r.spdf <- as(newplot, "SpatialPixelsDataFrame")
 r.df <- as.data.frame(r.spdf)
-#head(r.df)
+# head(r.df)
 
 p = ggplot()+
   geom_polygon(data=eb, aes(x=long, y=lat, group=group))+
-  geom_tile(data=r.df, aes(x=x, y=y, fill = layer)) + 
+  geom_tile(data=r.df, aes(x=x, y=y, fill = V1)) + 
   labs(x="Longitude", y="Latitude", title="Mean Temperature Score", fill="Score") + 
   scale_fill_gradient(low="blue", high="yellow")
 p
