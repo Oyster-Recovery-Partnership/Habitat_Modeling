@@ -191,7 +191,7 @@ ggsave(paste(dir.out,"cmecs_curve.png",sep="/"), p)
 # Larval 15.5 = 0, 26-31=was 1, 34.5=0; Adult: 10.5=0, 23-30=1, 34.5=0 (Barnes et al. 2007)
 # Mean summer: 5=0, 10-30=1, 40=0 (Cake 1983)
 # 8=0, 15-18=1, 34=0 (Cho et al. 2012 (gigas))
-temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36),c(0,0.05,0.25,1,1,0.25,0)))
+temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36),c(0,0.1,0.5,1,1,0.25,0)))
 names(temp_curve)=c("temp","score")
 
 p = ggplot(data = temp_curve, aes(x = temp, y = score)) + 
