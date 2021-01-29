@@ -11,7 +11,7 @@
 # source("~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Assessment/11_Habitat Modeling/Data/code/EB_ISSScore.R")
 # source("~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Assessment/11_Habitat Modeling/Data/code/EB_TempScore.R")
 
-#
+# if there is a mix of NaNs and NAs, change NaNs to Na just for consistancy 
 final.chl.score[is.nan(final.chl.score)] = NA
 final.iss.score[is.nan(final.iss.score)] = NA
 final.salt.score[is.nan(final.salt.score)] = NA
@@ -22,10 +22,9 @@ final.temp.score[is.nan(final.temp.score)] = NA
 #final.cmecs.score[is.nan(final.temp.score)] = NA # no NaNs
 
 # finals = rbind(final.chl.score, final.iss.score, final.salt.score, 
-#                final.temp.score, final.o2.score, final.depth.score)
-# # limit to only those cells that have all scores, otherwise it can be weird
-# test = apply(finals, 1, function(x) {any(is.na(x))})
-# oys_hsi = apply(finals), 2, mean,na.rm=T)
+#                final.temp.score, final.o2.score, final.depth.score,
+#                final.cmecs.score)
+# oys_hsi = apply(finals, 2, mean) #,na.rm=T)
 
 oys_hsi = (final.chl.score +
              final.iss.score +
@@ -37,7 +36,7 @@ oys_hsi = (final.chl.score +
 
 hsi_map = newr
 values(hsi_map) = oys_hsi
-plot(hsi_map)  
+# plot(hsi_map)  
 
 # change raster to spatial pixels data frame to data frame in order to use ggplot
 r.spdf <- as(hsi_map, "SpatialPixelsDataFrame")
@@ -69,4 +68,20 @@ ggsave("~/Oyster Recovery Partnership, Inc/ORP - Operations//Monitoring and Asse
 # AIC(m5)
 # AIC(m6)
 # AIC(m7)
+
+# # test errors
+# x = which(is.na(oys_hsi))
+# y = which(is.na(final.cmecs.score))
+# xy = x[!x %in% y]
+
+# oys_hsi[xy]
+# final.chl.score[xy]
+# final.iss.score[xy]
+# final.salt.score[xy]
+# final.temp.score[xy] # only one with NAs
+# final.o2.score[xy]
+# final.depth.score[xy] 
+# final.cmecs.scores[xy]
+  
+  
 
