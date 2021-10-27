@@ -131,56 +131,49 @@ sum(gIsValid(spydf_states, byid=TRUE)==FALSE)
 # test = st_crop(nc, c(xmin=-76.37011, xmax=-76.17721, ymin=38.81691, ymax=38.97435))
 
 # classifications
-cmecs_curve = as.data.frame(cbind(c("Bio_Shell_Reef",
-                                    "Bio_Shell_Rubble",
-                                    "Anth_Shell_Rubble",
-                                    "Bio_Shell_Rubble_Sand",
-                                    "Anth_Shell_Rubble_Sand", 
-                                    "Bio_Shell_Reef_Mud",
-                                    "Bio_Shell_Rubble_Mud", 
-                                    "Anth_Shell_Rubble_Mud",
-                                    "Sand_Shell",  
+cmecs_curve = as.data.frame(cbind(c("Mud",
+                                    "Sandy Mud",
+                                    "Muddy Sand",
                                     "Sand",
-                                    "MuddySand_Shell", 
-                                    "MuddySand",
-                                    "SandyMud",
-                                    "Mud_Shell",
-                                    "Mud"),
-                                  c(rep(1,5),
-                                    rep(0.9,3),
-                                    1, #sandy_shell
-                                    1, #sand
-                                    1, #MuddySand_Shell
-                                    0.75,#muddy sand 
-                                    0.5,#sandy mud
-                                    1,#mud shell
-                                    0.01), #mud
-                                  # c(1, 0.9, 0.8, 0.8,  
-                                  #   0.75, 0.7, 0.7, 0.7,
-                                  #   0.6, 0.5, 0.3, 0.2,
-                                  #   0.1, 0.1, -0.01),
-                                  c(seq(1,15,by=1))))
-                                  #c("Biogenic_Oyster_Reef",
-                                  #  "Biogenic_Oyster_Rubble",
-                                  #  "Anthropogenic_Oyster_Rubble",
-                                  #  "Sand",
-                                  #  "Muddy_Sand",
-                                  #  "Sandy_Mud",
-                                  #  "Mud"),
-                                  #c(1,0.9,0.8,0.4,0.2,0.1,0),
-                                  #c(seq(1,7,by=1))))
+                                    "Biogenic Oyster Reef",
+                                    "Biogenic Oyster Rubble",
+                                    "Anthprogogenic Shell Rubble",
+                                    "Anthropogenic Shell Rubble"),
+                                  c(0.1, 0.5, 0.75, rep(1,5)),
+                                  c(seq(1, 8, by=1))))
 names(cmecs_curve) = c("cmecs","ranks","orders")
 cmecs_curve = mutate(cmecs_curve, cmecs = as.character(cmecs), ranks = as.numeric(as.character(ranks)), orders = as.numeric(orders))
 
 # plot curve
-p = ggplot(data = cmecs_curve, aes(x = reorder(cmecs, ranks), y = ranks)) + 
-  geom_bar(stat = "identity", width = 0.8) + 
-  theme_bw() + labs(x = "CMECS Classification", y = "Habitat Rank") + 
+p1 = ggplot(data = cmecs_curve, aes(x = reorder(cmecs, orders), y = ranks)) + 
+  geom_point(stat = "identity", size=2) + 
+  theme_bw() + labs(x = "CMECS")+#, y = "Habitat Rank") + 
   theme(text = element_text(size=20),
-        axis.text.x = element_text(angle = 20, hjust = 1)) +
-  ggtitle("CMECS")
-p 
-ggsave(paste(dir.out,"cmecs_curve.png",sep="/"), p)
+        axis.text.x = element_text(angle = 20, hjust = 1))# +
+  #ggtitle("CMECS")
+p1 
+ggsave(paste(dir.out,"cmecs_curve.png",sep="/"), p1)
+
+cmecs_curve2 = as.data.frame(cbind(c("M",
+                                    "SM",
+                                    "MS",
+                                    "S",
+                                    "BORf",
+                                    "BORb",
+                                    "ASRf",
+                                    "ASRb"),
+                                  c(0.1, 0.5, 0.75, rep(1,5)),
+                                  c(seq(1, 8, by=1))))
+names(cmecs_curve2) = c("cmecs","ranks","orders")
+cmecs_curve2 = mutate(cmecs_curve2, cmecs = as.character(cmecs), ranks = as.numeric(as.character(ranks)), orders = as.numeric(orders))
+
+# plot curve
+p1b = ggplot(data = cmecs_curve2, aes(x = reorder(cmecs, orders), y = ranks)) + 
+  geom_point(stat = "identity", size=2) + 
+  theme_bw() + labs(x = "CMECS")+#, y = "Habitat Rank") + 
+  theme(text = element_text(size=20))#ggtitle("CMECS")
+p1b 
+
 # -------------- #
 
 
@@ -191,18 +184,18 @@ ggsave(paste(dir.out,"cmecs_curve.png",sep="/"), p)
 # Larval 15.5 = 0, 26-31=was 1, 34.5=0; Adult: 10.5=0, 23-30=1, 34.5=0 (Barnes et al. 2007)
 # Mean summer: 5=0, 10-30=1, 40=0 (Cake 1983)
 # 8=0, 15-18=1, 34=0 (Cho et al. 2012 (gigas))
-temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36),c(0,0.1,0.5,1,1,0.25,0)))
-names(temp_curve)=c("temp","score")
-
-p = ggplot(data = temp_curve, aes(x = temp, y = score)) + 
-  geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Temperature (C)", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Temperature")
-p 
-ggsave(paste(dir.out,"temp_curve.png",sep="/"), p)
+# temp_curve = as.data.frame(cbind(c(-2,5,10,20,30,33,36),c(0,0.1,0.5,1,1,0.25,0)))
+# names(temp_curve)=c("temp","score")
+# 
+# p = ggplot(data = temp_curve, aes(x = temp, y = score)) + 
+#   geom_point()+
+#   geom_line()+
+#   #geom_area(col="lightgrey") + 
+#   theme_bw() + labs(x = "Temperature (C)", y = "Habitat Rank") + 
+#   theme(text = element_text(size=20)) +
+#   ggtitle("Temperature")
+# p 
+# ggsave(paste(dir.out,"temp_curve.png",sep="/"), p)
 # -------------- #
 
 
@@ -225,33 +218,33 @@ ggsave(paste(dir.out,"temp_curve.png",sep="/"), p)
 
 # min
 # 2=0, 4=0.05, 8+=1 (Sonait et al. 2013, Hijuelos et al. 2017, Préau et al. 2015)
-min_salt_curve = as.data.frame(cbind(c(2,4,8,10),c(0,0.05,1,1)))
+min_salt_curve = as.data.frame(cbind(c(2,4,8,20),c(0,0.05,1,1)))
 names(min_salt_curve)=c("salinity","score")
 
-p = ggplot(data = min_salt_curve, aes(x = salinity, y = score)) + 
+p2= ggplot(data = min_salt_curve, aes(x = salinity, y = score)) + 
   geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Salinity", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Minimum Salinity")
-p 
-ggsave(paste(dir.out,"min_salt_curve.png",sep="/"), p)
+  geom_line(lwd=2)+
+  #geom_area(col="lightgrey") + 
+  theme_bw() + labs(x = "Salinity")+#, y = "Habitat Rank") + 
+  theme(text = element_text(size=20)) #+
+  #ggtitle("Minimum Salinity")
+p2 
+ggsave(paste(dir.out,"min_salt_curve.png",sep="/"), p2)
 
 # max
 # no other papers used max so modeling off of mean
-max_salt_curve = as.data.frame(cbind(c(14,28,35,40),c(1,1,0.1,0)))
-names(max_salt_curve)=c("salinity","score")
-
-p = ggplot(data = max_salt_curve, aes(x = salinity, y = score)) + 
-  geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Salinity", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Maximum Salinity")
-p 
-ggsave(paste(dir.out,"max_salt_curve.png",sep="/"), p)
+# max_salt_curve = as.data.frame(cbind(c(14,28,35,40),c(1,1,0.1,0)))
+# names(max_salt_curve)=c("salinity","score")
+# 
+# p = ggplot(data = max_salt_curve, aes(x = salinity, y = score)) + 
+#   geom_point()+
+#   geom_line()+
+#   geom_area(col="lightgrey") + 
+#   theme_bw() + labs(x = "Salinity", y = "Habitat Rank") + 
+#   theme(text = element_text(size=20)) +
+#   ggtitle("Maximum Salinity")
+# p 
+# ggsave(paste(dir.out,"max_salt_curve.png",sep="/"), p)
 # -------------- #
 
 
@@ -262,18 +255,18 @@ ggsave(paste(dir.out,"max_salt_curve.png",sep="/"), p)
 # 0.5-3 optimal, no curve (Hijuelos et al. 2017)
 # 0-3.5=1, 4.5=0.5, 4.6-10=0 (Theuerkauf and Lipscius 2016)
 # 0-4=1, 8=0 (Starke et al. 2011)
-depth_curve = as.data.frame(cbind(c(0,3.5,10),c(1,1,0)))
+depth_curve = as.data.frame(cbind(c(0,3.5,10, 25),c(1,1,0, 0)))
 names(depth_curve)=c("depth","score")
 
-p = ggplot(data = depth_curve, aes(x = depth, y = score)) + 
+p3 = ggplot(data = depth_curve, aes(x = depth, y = score)) + 
   geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Depth (m)", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Depth")
-p 
-ggsave(paste(dir.out,"depth_curve.png",sep="/"), p)
+  geom_line(lwd=2)+
+  #geom_area(col="lightgrey") + 
+  theme_bw() + labs(x = "Depth (m)")+#, y = "Habitat Rank") + 
+  theme(text = element_text(size=20)) #+
+  #ggtitle("Depth")
+p3 
+ggsave(paste(dir.out,"depth_curve.png",sep="/"), p3)
 
 # -------------- #
 
@@ -291,18 +284,18 @@ ggsave(paste(dir.out,"depth_curve.png",sep="/"), p)
 # 0=0, 100=1 (Theuerkauf et al. 2018)
 #chl_curve = as.data.frame(cbind(c(0,12,50,55),c(0,1,1,0)))
 #chl_curve = as.data.frame(cbind(c(0,100),c(0,1)))
-chl_curve = as.data.frame(cbind(c(0,12,50),c(0,0.75,1)))
+chl_curve = as.data.frame(cbind(c(0,12,40),c(0,0.75,1)))
 names(chl_curve)=c("chl","score")
 
-p = ggplot(data = chl_curve, aes(x = chl, y = score)) + 
+p4 = ggplot(data = chl_curve, aes(x = chl, y = score)) + 
   geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Chl a", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Chl a")
-p 
-ggsave(paste(dir.out,"chl_curve.png",sep="/"), p)
+  geom_line(lwd=2)+
+  #geom_area(col="lightgrey") + 
+  theme_bw() + labs(x = "Chl a")+#, y = "Habitat Rank") + 
+  theme(text = element_text(size=20)) #+
+ # ggtitle("Chl a")  
+p4 
+ggsave(paste(dir.out,"chl_curve.png",sep="/"), p4)
 # -------------- #
 
 
@@ -314,37 +307,47 @@ ggsave(paste(dir.out,"chl_curve.png",sep="/"), p)
 # Deep- channel seasonal	≥ 1 (mg/L)
 # Perc. Sat. 40=0, 73+=1 (Cho et al. 2012)
 # convert perc. sat. to mg/l for Cho, 40=3.3, 73=6.03 
-min_o2_curve = as.data.frame(cbind(c(3.3,6.03,14),c(0,1,1)))
+min_o2_curve = as.data.frame(cbind(c(0,3.3,6.03,15),c(0,0,1,1)))
 names(min_o2_curve)=c("o2","score")
 
-p = ggplot(data = min_o2_curve, aes(x = o2, y = score)) + 
+p5 = ggplot(data = min_o2_curve, aes(x = o2, y = score)) + 
   geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "Dissolved Oxygen", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Min. Dissolved Oxygen (mg/L)")
-p 
-ggsave(paste(dir.out,"min_o2_curve.png",sep="/"), p)
+  geom_line(lwd=2)+
+ # geom_area(col="lightgrey") + 
+  theme_bw() + labs(x = "Dissolved Oxygen")+#, y = "Habitat Rank") + 
+  theme(text = element_text(size=20)) #+
+  #ggtitle("Min. Dissolved Oxygen (mg/L)")
+p5 
+ggsave(paste(dir.out,"min_o2_curve.png",sep="/"), p5)
 # -------------- #
 
 
 # -------------- #
 # INORGANIC SUSPENDED SOLIDS
 # -------------- #
-# 0-9=1, 50=0.1 mg/l suspended sediments (Cho et al. 2012)
-ss_curve = as.data.frame(cbind(c(0, 0.5, 5),c(1, 0.5, 0)))
-names(ss_curve)=c("ss","score")
-
-p = ggplot(data = ss_curve, aes(x = ss, y = score)) + 
-  geom_point()+
-  geom_line()+
-  geom_area(col="lightgrey") + 
-  theme_bw() + labs(x = "ISS (g/L)", y = "Habitat Rank") + 
-  theme(text = element_text(size=20)) +
-  ggtitle("Inorganic Suspended Solids (g/L)")
-p 
-ggsave(paste(dir.out,"ss_curve.png",sep="/"), p)
+# # 0-9=1, 50=0.1 mg/l suspended sediments (Cho et al. 2012)
+# ss_curve = as.data.frame(cbind(c(0, 0.5, 5),c(1, 0.5, 0)))
+# names(ss_curve)=c("ss","score")
+# 
+# p = ggplot(data = ss_curve, aes(x = ss, y = score)) + 
+#   geom_point()+
+#   geom_line()+
+#   geom_area(col="lightgrey") + 
+#   theme_bw() + labs(x = "ISS (g/L)", y = "Habitat Rank") + 
+#   theme(text = element_text(size=20)) +
+#   ggtitle("Inorganic Suspended Solids (g/L)")
+# p 
+# ggsave(paste(dir.out,"ss_curve.png",sep="/"), p)
 # -------------- #
 
+library(devtools)
+library(ggpubr)
+
+ggarrange(p2 + theme(axis.title.y=element_blank()), 
+          p3 + theme(axis.title.y=element_blank()), 
+          p4 + theme(axis.title.y=element_blank()), 
+          p5 + theme(axis.title.y=element_blank()),
+          p1b + theme(axis.title.y=element_blank()),
+          labels = c("V1", "V2", "V3","V4","V5"),
+          ncol=2, nrow=2)
 
