@@ -39,8 +39,11 @@ test <- EB_df %>% st_as_sf(., coords = c("long","lat")) %>%
 #coordinates(HSI) = ~lon+lat
 #proj4string(HSI) = CRS("+proj=longlat +datum=WGS84 +no_defs")
 HSI2 = st_as_sf(HSI, coords = c("lon","lat")) %>% st_cast("POINT")
-HSI_bars = over(as(test, "Spatial"), as(HSI2, "Spatial"))
-HSI_bars$id = test$id
+# HSI_bars = over(as(test, "Spatial"), as(HSI2, "Spatial"))
+# HSI_bars$id = test$id
+# HSI_bar_scores = left_join(EB_df, HSI_bars, by = "id")
+HSI_bars = st_intersection(test, HSI2) %>%
+  group_by(id) %>% summarize(HSI = mean(HSI, na.rm=T))
 HSI_bar_scores = left_join(EB_df, HSI_bars, by = "id")
 
 
